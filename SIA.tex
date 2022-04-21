@@ -12,7 +12,7 @@
 \usepackage{textcomp}
 \usepackage{float}
 
-\title{IVOA Simple Image Access}
+\title{IVOA Dataset Simple Access Protocol}
 
 \ivoagroup{Data Access Layer Working Group}
 
@@ -26,15 +26,15 @@
 
 \begin{document}
 \begin{abstract}
-The Simple Image Access protocol (SIA) provides capabilities for the discovery, description, access, and retrieval of multi-dimensional image datasets, including 2-D images as well as datacubes of three or more dimensions.  SIA data discovery is based on the ObsCore Data Model (ObsCoreDM, \cite{std:OBSCORE}), which primarily describes data products by the physical axes (spatial, spectral, time, and polarization). Image datasets with dimension greater than 2 are often referred to as \textit{datacubes}, \textit{cube} or \textit{image cube} datasets and may be considered examples of \textit{hypercube} or \textit{n-cube} data.  In this document the term “image” refers to general multi-dimensional datasets and is synonymous with these other terms unless the image dimensionality is otherwise specified. \\
-SIA provides capabilities for image discovery and access. Data discovery and  metadata access (using ObsCoreDM) are defined here. The capabilities for drilling down  to data files (and related resources) and services for remote access are defined elsewhere, but SIA also allows for direct access to retrieval. 
+The Dataset Simple  Access protocol (DsSAP) provides capabilities for the discovery, description, access, and retrieval of dataproducts, including spectra, timeseries, visibility data,   2-D images as well as datacubes of three or more dimensions.  DsSAP data discovery is based on the ObsCore Data Model (ObsCoreDM, \cite{std:OBSCORE}), which primarily describes data products by the physical axes (spatial, spectral, time, and polarization). Image datasets with dimension greater than 2 are often referred to as \textit{datacubes}, \textit{cube} or \textit{image cube} datasets and may be considered examples of \textit{hypercube} or \textit{n-cube} data.  In this document the term “image” refers to general multi-dimensional datasets and is synonymous with these other terms unless the image dimensionality is otherwise specified. \\
+DsSAP provides capabilities for dataset discovery and access. Data discovery and  metadata access (using ObsCoreDM) are defined here. The capabilities for drilling down  to data files (and related resources) and services for remote access are defined elsewhere, but DsSAP also allows for direct access to retrieval. 
 \end{abstract}
 \section*{Acknowledgments}
 The authors would like to thank all the participants in DAL-WG discussions  for their ideas, critical reviews, and contributions to this document.
 
 \section{Introduction}
-The Simple Image Access (SIA) protocol defines several capabilities to support discovery and access to astronomical image datasets of any dimension.  Typical image datasets include 2-D spatial images, spectral data cubes, and cube and hypercube data of higher dimensions as well as derived image data products.  The underlying ObsCore data model is a simplified view on the typical image datasets derived from observational data, which have some combination of spatial, spectral (including velocity and redshift), time, and polarization axes.  
-For complete access to datacubes, the SIA-2.0 specification  makes use of features defined in DataLink \citep{std:DataLink}. It also makes use of AccessData services, as well as custom data services.
+The Dataset Simple Access (DsSAP) protocol defines several capabilities to support discovery and access to astronomical datasets of any type and dimension.  Typical datasets include spectra, timeseries, 2-D spatial images, spectral data cubes, and cube and hypercube data of higher dimensions as well as derived image data products an event list or visibility data.  The underlying ObsCore data model is a simplified view on the typical image datasets derived from observational data, which have some combination of spatial, spectral (including velocity and redshift), time, and polarization axes.  
+For complete access to datacubes, the SIA-2.0 specification  makes use of features defined in DataLink \citep{std:DataLink}. It also makes use of AccessData services such as SODA, as well as custom data services.
 
 
 
@@ -45,42 +45,22 @@ For complete access to datacubes, the SIA-2.0 specification  makes use of featur
 \label{fig:architecture}
 \end{figure}
 
-SIA defines data discovery and metadata capabilities that work with other DAL services to enable image and data cube access. The basic interface for the capabilities defined in this specification are described in DALI \citep{std:DALI}. DataLink can be used with SIA for finding access URL(s) for files, related resources, and data services such as AccessData (in development). SIA services also support VOSI-availability and VOSI-capabilities \citep{std:VOSI}  resources.
+DsSAP defines data discovery and metadata capabilities that work with other DAL services to enable image, data cube and other types of dataset access. The basic interface for the capabilities defined in this specification are described in DALI \citep{std:DALI}. DataLink can be used with DsSAP for finding access URL(s) for files, related resources, and data services such as SODA. DsSAP services also support VOSI-availability and VOSI-capabilities \citep{std:VOSI}  resources.
 
-The ObsCore data model has been defined in \cite{std:OBSCORE}, it contains and organizes the minimal set of metadata necessary to discover datasets of interest for a specific purpose. The metadata returned from the SIA data discovery request is defined by the ObsCore data model and serialized according to the ObsTAP specification \citep{std:OBSCORE}; this may be extended with additional metadata (columns)  in the future.  A future version of SIA may define a separate resource for accessing the complete  data model metadata for a single dataset once such a model is available. Data discovery responses are returned in VOTable \citep{std:VOTABLE} format unless an alternate format is requested.
+The ObsCore data model has been defined in \cite{std:OBSCORE}, it contains and organizes the minimal set of metadata necessary to discover datasets of interest for a specific purpose. The metadata returned from the DsSAP data discovery request is defined by the ObsCore data model and serialized according to the ObsTAP specification \citep{std:OBSCORE}; this may be extended with additional metadata (columns)  in the future. Data discovery responses are returned in VOTable \citep{std:VOTABLE} format unless an alternate format is requested.
 
 \subsection{The Role in the IVOA Architecture}
 
-SIA specifies standardID values for each capability, as defined by VODataService \citep{std:VODS11}. SIA services may be registered in an IVOA Registry using the SimpleDALRegExt \citep{std:DALREGEXT} extension schema.
-\subsection{Changes from SIA-1.0 to SIA-2.0}
+DsSAP specifies standardID values for each capability, as defined by VODataService \citep{std:VODS11}. DsSAP services may be registered in an IVOA Registry using the SimpleDALRegExt \citep{std:DALREGEXT} extension schema.
+\subsection{Changes from SIA-2.0i to DsSAP}
 
-Virtual Observatory access to astronomical images has been available via the SIA-1.0 protocol for over a decade.  Many such services have been implemented since 2002, and SIA-1.0 \citep{std:SIAP} was formally standardized as an IVOA Recommendation in 2009.  The legacy SIA standard however pre-dates much of the VO technology developed since 2002, and is limited to two-dimensional images.  SIA-2.0 is multi-dimensional and fully integrated with the modern VO architecture and related standards.
-SIA-2.0 differs from legacy SIA-1.0 in the following aspects:
-\begin{itemize}
-    \item The capabilities for dynamic access to image datasets are expanded in scope, but are separated from data discovery and download of whole image datasets.  A separate "AccessData" specification currently under development will define the more advanced dynamic data access functionality.  Automated virtual data generation and discovery (as in SIA-1.0) is not currently supported but is being considered for a future version of SIA.
-    \item Description of Image datasets is now provided by the more abstract ObsCore data model, providing more comprehensive high level dataset metadata, most of which is common to other classes of astronomical data. Most of the attributes of the model can be queried using standard parameters, where SIA-1.0 only standardized positional queries. 
-    \item The version of VOTable   used  in the protocol (2.1) has been updated  and distinguishes between UCD and UType attributes. SIA-1.0 used a custom class of UCDs that pre-dated what are now UTypes, where ObsCore specifies standard UCD and UType values for use in the VOTable output.
-    \item Most elements of the SIA-2.0 service interface are standardized across all DAL interfaces, as defined separately by the DALI  interface standard.
-    \item SIAV2  supports the new DataLink  standard, providing additional capabilities for data access as well as the ability to link to related data products, as well as the VO Image data model standard currently under development, providing a full description of the structure of an image dataset.
-\end{itemize}
-While some of the more advanced capabilities for dynamic access to multi-dimensional images are still under development, the initial specification provides the capability to discover and download multi-dimensional image datasets via a service interface consistent with current VO standards
-
-\subsection{Current and Future support}
- These are the list of changes which  will be considered in a later version of this protocol  (SIA-2.1):
-\begin{itemize}
-    \item The protocol should support  a detailed {metadata} capability. In the current design, this   capability will take a single parameter with an identifier (typically a publisher dataset identifier from a data discovery response) and return a document with detailed metadata about the dataset. The primary usage is to drill-down to the detailed  metadata after discovery
-    \item The standardID for the {metadata} capability will  probably be : ivo://ivoa.net/std/SIA\#metadata-2.1  
-    \item  The parameter language should be extended to support case-insensitivity, wildcards, and pattern recognition.
-    \item The DALI UPLOAD facility will be defined in order to allow queries based on values stored in a file.
-    \item The protocol will also support an option for virtual data discovery. With this option, controlled by usage of an optional parameter, the  query can force the discovery of virtual datasets with best  matching to the input parameter constraints
-    \item COLLECTION and FACILITY currently provide query parameters provide selection on service defined set of strings. It would be good to define standardized lists of those at IVOA level for next version.
-    \item Visibility data and event lists are not considered as valid DPTYPES in this version due to complexity of data access functionalities for those dataset types.  
-\end{itemize}
-
+Virtual Observatory access to astronomical images has been available via the SIA-1.0 protocol for over a decade.  Many such services have been implemented since 2002, and SIA-1.0 \citep{std:SIAP} was formally standardized as an IVOA Recommendation in 2009. SSA \citep{std:SSA} played a similar role for spectra and also used specific metadata in the query response. SIA-2.0 \citep{std:SIA2} was multi-dimensional and fully integrated with the modern VO architecture and related standards, but restricted to images and data cubes.
+DsSAP is an extension of SIA2 to other dataproduct types. It can be seen as a server side  parameter based proxy to an ObsTAP service.
+IA-2.0 differs from legacy SIA-1.0 in the following aspects:
 \subsection{Motivating Use Cases}
-Below are some of the more common use cases that have motivated the development of the SIA specification. While this is not complete, it helps to understand the problem area covered by this specification.
+Below are some of the more common use cases that have motivated the development of the DsSAP specification. While this is not complete, it helps to understand the problem area covered by this specification.
 \subsubsection{Simple Data Discovery}
-Simple data discovery entails finding services that provide parameter based discovery of images and datacubes, querying the service(s) with a few well known kinds of queries that cover greater than 95\% of use, and getting back easily parsed summary metadata about each available data product. The service discovery would be performed with an IVOA Registry search using a new service type defined for SIA-2.0. 
+Simple data discovery entails finding services that provide parameter based discovery of images and datacubes, querying the service(s) with a few well known kinds of queries that cover greater than 95\% of use, and getting back easily parsed summary metadata about each available data product. The service discovery would be performed with an IVOA Registry search using a new service type defined for DsSAP. 
 
 The query for data would need to allow for querying in position, energy, time, and polarization:
 \begin{itemize}
@@ -94,26 +74,27 @@ The query for data would need to allow for querying in position, energy, time, a
     \item find data within a specified range of spatial resolution
     \item find data within a specified range of field-of-view
     \item find data within a range of exposure (integration) time
+    \item find data of a specific dataproduct\_type	    
 \end{itemize}
 Queries can also combine any of these kinds of constraints (e.g. query using
 position and energy, position and time, etc.). Queries should be easily formulated with parameter-value pairs.
 
 \subsubsection{Get Detailed Metadata}
-The data discovery phase returns a subset of the available metadata.  Clients may need additional detailed metadata (as defined by the ImageDM specification) in order to make decisions or perform computations required to access the data (e.g. using a separate low-level data access service as described in the draft AccessData specification). The client must be able to easily figure out if detailed metadata is available and, using an identifier from the discovery response, make a call to a web service to retrieve the detailed metadata.
+The data discovery phase returns a subset of the available metadata.  Clients may need additional detailed metadata (as defined by any IVOA Data model specification) in order to make decisions or perform computations required to access the data (e.g. using a separate low-level data access service as described in the SODA specification). The client must be able to easily figure out if detailed metadata is available and, using an identifier from the discovery response, make a call to a web service to retrieve the detailed metadata.
 
 \subsubsection{Download Complete Datasets}
 \label{sec:sync}
 
 The client should be able to download complete datasets with information available in the discovery response. If the dataset is a single file, the service should provide an access URL to the file; if it is multiple files, then an access URL to a DataLink service [9] can be provided, but the client must be able to easily distinguish these two scenarios.
 
-\subsubsection{Access a Datacube with Operations: Too Big to Download}
+\subsubsection{Access a Dataset with Operations: Too Big to Download}
 \label{sec:async}
-In many cases, datacubes are too large to download and process locally, so the client must be able to perform remote operations. Data discovery could be performed using any discovery protocol (SIA, TAP with ObsCore, etc.).  The client must be able to easily figure out if a low level access service is available for a discovered dataset. This could be using a URL provided in the response or by calling an associated DataLink service. Access operations include basic filtering (cut out a subsection of the data), transformations, or other pixel-level operations or even analysis. With current  version of the AccessData specification, we will only cover extracting a simple subset of an image or datacube. 
+In many cases, datasets are too large to download and process locally, so the client must be able to perform remote operations. Data discovery could be performed using any discovery protocol (DsSAP, SIA, TAP with ObsCore, etc.).  The client must be able to easily figure out if a low level access service is available for a discovered dataset. This could be using a URL provided in the response or by calling an associated DataLink service. Access operations include basic filtering (cut out a subsection of the data), transformations, or other pixel-level operations or even analysis. With version 1.0 of the SODA 1.0  specification, we will only cover extracting a simple subset of an image or datacube. 
 
 \subsection{Scope and Related Documents}
 \label{sec:examples}
 
-This document can  support use cases 1.4.1, 1.4.3, and 1.4.4; support for 1.4.2 has been deferred to a future version. Some of the support for these use cases is provided by the separate capabilities defined in the DataLink and AccessData specifications. Together, these three specifications, plus TAP \citep{std:TAP}, and  within the framework provided by ObsCore, and the future image and cube data model provide a set of capabilities required to support a broad range of use cases.
+Some of the support for these use cases is provided by the separate capabilities defined in the DataLink and SODA specifications. Together, these three specifications, plus TAP \citep{std:TAP}, and  within the framework provided by ObsCore, and the future image and cube data model provide a set of capabilities required to support a broad range of use cases.
 
 
 \begin{figure}[H]
@@ -124,14 +105,14 @@ This document can  support use cases 1.4.1, 1.4.3, and 1.4.4; support for 1.4.2 
 \end{figure}
 
 
-Each box in the above diagram shows a single capability. The SIA query capability is defined in this specification; the SIA metadata capability will be defined in a later version of this specification, once the ImageDM is completed. DataLink  and AccessData are separate specifications. The dashed lines represent optimisations that are mentioned in use cases above, where subsequent service usage should be easy to discover and invoke.
+Each box in the above diagram shows a single capability. The DsSAP query capability is defined in this specification; the SIA metadata capability will be defined in a later version of this specification, once the ImageDM is completed. DataLink  and SODA are separate specifications. The dashed lines represent optimisations that are mentioned in use cases above, where subsequent service usage should be easy to discover and invoke.
 
 
 
 
 \section{Resources}
 \label{sec:parameters}
-The SIA data discovery capability is implemented as a synchronous resource conforming to the DALI-sync  specification.
+The DsSAP data discovery capability is implemented as a synchronous resource conforming to the DALI-sync  specification.
 
 
 \begin{table}[H]
@@ -139,7 +120,7 @@ The SIA data discovery capability is implemented as a synchronous resource confo
 \sptablerule
 \textbf{resource type}&\textbf{resource name}&\textbf{required}\cr
 \sptablerule
-\texttt{\{required\}}&\texttt{service specific}&{yes}\cr
+\texttt{\{query\}}&\texttt{service specific}&{yes}\cr
 \texttt{DALI-examples}&\texttt{/examples}&\texttt{no}\cr
 \texttt{VOSI-availability}&\texttt{/availability}&\texttt{yes}\cr
 \texttt{VOSI-capabilities}&\texttt{/capability}&\texttt{yes}\cr
@@ -148,7 +129,7 @@ The SIA data discovery capability is implemented as a synchronous resource confo
 \caption{DALI specification of SIA resources}
 \label{tab:DALIspec}
 \end{table}
-An SIA service must have at least one \{query\} resource; it could have multiple \{query\} resources (e.g. to support alternate authentication schemes where the path is different). All \{query\} resources must be siblings of the VOSI-capabilities resource; this limitation enables a client with just the URL for an SIA {query} resource (e.g. from a Datalink service descriptor) to find the VOSI-capabilities resource and discover all the capabilities provided.
+A DsSAP service must have at least one \{query\} resource; it could have multiple \{query\} resources (e.g. to support alternate authentication schemes where the path is different). All \{query\} resources must be siblings of the VOSI-capabilities resource; this limitation enables a client with just the URL for a DsSAP {query} resource (e.g. from a Datalink service descriptor) to find the VOSI-capabilities resource and discover all the capabilities provided.
 
 \subsection{\{query\} resource}
 \label{sec:query}
@@ -187,7 +168,7 @@ The units for numeric values are specified for each parameter and never included
  
 Except where explicitly noted (see~\ref{sec:ID}), query parameters for text or string fields are always case-sensitive and indicate an exact match. 
 
-The sections describing query parameters make use of fixed reference systems and units to simplify client and service implementation. These choices are not suitable for all domains; the values are chosen to enable the {query} resource to be used to search for most standard observational astronomy data. If they are not suitable for a specific domain of interest (e.g. planetary science) then it is feasible to write a very short standard that re-uses the SIA {query} capability but redefines the hard-coded systems and units. This new standard would have a new standardID to distinguish services that implement it from those that implement the capability defined here.
+The sections describing query parameters make use of fixed reference systems and units to simplify client and service implementation. These choices are not suitable for all domains; the values are chosen to enable the {query} resource to be used to search for most standard observational astronomy data. If they are not suitable for a specific domain of interest (e.g. planetary science) then it is feasible to write a very short standard that re-uses the DsSAP {query} capability but redefines the hard-coded systems and units. This new standard would have a new standardID to distinguish services that implement it from those that implement the capability defined here.
 
 
 
@@ -462,7 +443,9 @@ The FACILITY parameter is a string-valued parameter that specifies the name of t
 The INSTRUMENT parameter is a string-valued parameter that specifies the name of the instrument with which the data was acquired. The value is compared with the instrument\_name from the ObsCore data model.
 
 \subsubsection{DPTYPE}
-The DPTYPE parameter is a string-valued parameter that specifies the type of data. The value is compared with the dataproduct\_type from the ObsCore data model. For the SIA \{query\} resource, the only values that should be returned for dataproduct\_type are \textit{image} and \textit{cube}, so this parameter can be only really be used to select one of these.
+The DPTYPE parameter is a string-valued parameter that specifies the type of data. The value is compared with the dataproduct\_type from the ObsCore data model.  In contrast to SIA2.0 which allows only dataproduct\_types  \textit{image} and \textit{cube}, all the other dataproduct\_types are allowed, in such a way that we can constrain the service to retrieve visibility data, timeseries and event lists. Using DPTYPE with the "spectrum" value can be considered as an upgrade of the SSA protocol.
+
+ObsCore extension have been defined for visibility data and TimeSeries. It is possible to query services using these extensions by optional query parameters defined in Appendix B.
 
 \subsubsection{CALIB}
 The CALIB parameter is a integer-valued parameter that specifies the calibration level of the data. The value is compared with the calib\_level from the ObsCore data model. To find raw data:
@@ -493,18 +476,18 @@ The FORMAT parameter specifies response format(s)  (the access\_format column fr
 The MAXREC parameter is defined in DALI and allows the client to limit the number or records in the response. A service implementation may also impose default and maximum values for this limit. However the limit is determined, if the output is truncated due to the limit the server must indicate this using an overflow  (section~\ref{sec:succesful}) indicator except in the the special case of MAXREC=0, where the  service respond with metadata-only (normal output document with no records).
 
 \subsubsection{UPLOAD}
- The DALI UPLOAD parameter is not used by this version of SIA. The use case of uploading lists of coordinates is covered by the multiple-valued parameters values.
+ The DALI UPLOAD parameter is not used by this version of DsSAP. The use case of uploading lists of coordinates is covered by the multiple-valued parameters values.
 
 \subsubsection{Service PARAMETER self description}
 Any service may  include a DataLink service descriptor in the VOTable output to describe itself. This descriptor would describe the supported query parameters (standard and custom), including list of values for those with a fixed list (e.g. COLLECTION, INSTRUMENT, FACILITY, DPTYPE, CALIB, and FORMAT).
 
 \subsection{Availability: VOSI-availability}
-A web service with SIA capabilities must have a VOSI-availability resource \citep{std:VOSI}  as described in DALI .
+A web service with DsSAP capabilities must have a VOSI-availability resource \citep{std:VOSI}  as described in DALI .
 \subsection{Capabilities: VOSI-capabilities}
-A web service with SIA capabilities must have a VOSI-capabilities resource \citep{std:VOSI} as described in DALI . The standardID for the \{query\} capability is 
+A web service with DsSAP capabilities must have a VOSI-capabilities resource \citep{std:VOSI} as described in DALI . The standardID for the \{query\} capability is 
 
 \begin{lstlisting}
-ivo://ivoa.net/std/SIA#query-2.0
+ivo://ivoa.net/std/DSSAP#query-1.0
 \end{lstlisting}
 
 All DAL services must implement the /capabilities resource. The following capabilities document shows the minimal metadata and does not require a registry extension schema:
@@ -520,21 +503,21 @@ All DAL services must implement the /capabilities resource. The following capabi
   <capability standardID="ivo://ivoa.net/std/VOSI#capabilities">
     <interface xsi:type="vs:ParamHTTP" version="1.0">
       <accessURL use="base">
-         http://example.com/sia2/capabilities
+         http://example.com/dssap/capabilities
       </accessURL>
     </interface>
   </capability>
   <capability standardID="ivo://ivoa.net/std/VOSI#availability">
     <interface xsi:type="vs:ParamHTTP" version="1.0">
       <accessURL use="full">
-         http://example.com/sia2/availability
+         http://example.com/dssap/availability
       </accessURL>
     </interface>
   </capability>
   <capability standardID="ivo://ivoa.net/std/SIA#query-2.0">
     <interface xsi:type="vs:ParamHTTP" role="std" version="2.0">
       <accessURL>
-           http://example.com/sia2/query
+           http://example.com/dssap/query
       </accessURL>
     </interface>
     <!-- service details from extension schema could go here -->
@@ -576,21 +559,21 @@ Since the \{query\} response is usually dynamically generated, the Content-Lengt
 \subsubsection{Related Service Metadata}
 The DataLink specification  gives a recipe for including additional resources in VOTable that enable the client to invoke services using values from the table as parameter values. 
 
-If the provider implements a DataLink service for the data being found via SIA, the \{query\} response should include a description for invoking the DataLink service, usually using values from the obs\_publisher\_did column.
+If the provider implements a DataLink service for the data being found via DsSAP, the \{query\} response should include a description for invoking the DataLink service, usually using values from the obs\_publisher\_did column.
  
-If the provider implements an AccessData capability for the data being found via SIA and this capability can be invoked directly using an identifier in the \{query\} response, the \{query\} response should include a description for invoking this capability, usually using values from the obs\_publisher\_did column.
+If the provider implements a SODA capability for the data being found via DsSAP and this capability can be invoked directly using an identifier in the \{query\} response, the \{query\} response should include a description for invoking this capability, usually using values from the obs\_publisher\_did column.
 
 
 
-\subsubsection{SIA {query} Service Descriptor}
+\subsubsection{DsSAP {query} Service Descriptor}
 
-The DataLink specification describes a mechanism for describing a service within a VOTable resource and recommends that services can describe themselves with a special resource with name="this". SIA \{query\} responses should include a descriptor describing both standard and custom query parameters (if applicable). The descriptor for a service with standard parameters (see~\ref{sec:query}) would be:
+The DataLink specification describes a mechanism for describing a service within a VOTable resource and recommends that services can describe themselves with a special resource with name="this". DsSAP \{query\} responses should include a descriptor describing both standard and custom query parameters (if applicable). The descriptor for a service with standard parameters (see~\ref{sec:query}) would be:
 \begin{lstlisting}[language=XML]
 <RESOURCE type="meta" utype="adhoc:service" name="this">
  <PARAM name="standardID" datatype="char" arraysize="*"
-        value="ivo://ivoa.net/std/SIA#query-2.0" />
+        value="ivo://ivoa.net/std/DSSAP#query-2.0" />
  <PARAM name="accessURL" datatype="char" arraysize="*"
-        value="http://example.com/sia2/query" />
+        value="http://example.com/dssap/query" />
  <GROUP name="inputParams">
   <PARAM name="POS" datatype="char" arraysize="*" xtype="circle" />
   <PARAM name="POS" datatype="char" arraysize="*" xtype="range" />
@@ -629,7 +612,7 @@ This VOTable resource should be included in the output from all queries; it is e
 
 
 \subsubsection{Use of access\_url and access\_format}
-If the SIA service is only dealing with simple data (one file per result), the access\_url column may be a link directly to that file, in which case the access\_format column should specify the file format (e.g. application/fits). 
+If the DsSAP service is only dealing with simple data (one file per result), the access\_url column may be a link directly to that file, in which case the access\_format column should specify the file format (e.g. application/fits). 
 
 If the data provider implements a DataLink service for the data being found via the SIA {query} capability, they may put a URL to invoke the DataLink {links} capability (with ID parameter and value) in the access\_url column; if they do this, they must also put the standard DataLink MIME type in the access\_format column.
 
@@ -670,9 +653,9 @@ UsageFault: invalid BAND value -2
 \section{Examples}
 \label{sec:Examples}
 This section presents two examples of queries and responses corresponding to the following scenarios : \\
-   How do I query a SIAV2 service containing  IRAS-IRIS images in a circle of 0.1 deg around position 2.8425 +74.4846 selecting 200 and 60 micron bands ? \\
+   How do I query a DsSAP service containing  IRAS-IRIS images in a circle of 0.1 deg around position 2.8425 +74.4846 selecting 200 and 60 micron bands ? \\
 Note: Spaces in parameter values must be URL-encoded as \%2B or +; we leave this out of the example to make it easier to read.\\
-{\footnotesize http://dalservices.ivoa.net/sia2/query?POS=CIRCLE 2.8425 74.4846 0.1 \\ \&BAND=0.0002\&BAND=0.00006\&COLLECTION=IRAS-IRIS}
+{\footnotesize http://dalservices.ivoa.net/dssap/query?POS=CIRCLE 2.8425 74.4846 0.1 \\ \&BAND=0.0002\&BAND=0.00006\&COLLECTION=IRAS-IRIS\&DPTYPE=cube}
 
 
 \begin{lstlisting}[basicstyle=\scriptsize,language=XML]
@@ -876,7 +859,7 @@ Note: Spaces in parameter values must be URL-encoded as \%2B or +; we leave this
 \end{lstlisting}
          How do I query a service containing radio cubes from Alma operated by NRAO in a circle of 0.1 deg around position 180.47 -18.70 in the CO band in the range 800 microns to 900 microns and made in the time range between Mjd=55708 and 55710 ? \\
 Note: Spaces in parameter values must be URL-encoded as \%2B or +; we leave this out of the example to make it easier to read.\\
-{\footnotesize http://dalservices.ivoa.net/sia\_b?REQUEST=query\&POS=CIRCLE 180.475 -18.70 0.01 \\ \&BAND= 0.0008 0.0009\&TIME= 55708 55710\&COLLECTION=ALMA} 
+{\footnotesize http://dalservices.ivoa.net/dssap?REQUEST=query\&POS=CIRCLE 180.475 -18.70 0.01 \\ \&BAND= 0.0008 0.0009\&TIME= 55708 55710\&COLLECTION=ALMAi\&DPTYPE=image} 
 \begin{lstlisting}[basicstyle=\scriptsize,language=XML]
 <?xml version="1.0" encoding="UTF-8" ?> 
 
@@ -1193,6 +1176,8 @@ Note: Spaces in parameter values must be URL-encoded as \%2B or +; we leave this
 \end{lstlisting}
 \appendix
 \section{Changes}
+\subsection{WD-DsSAP1.0}
+Modification of SIA2.0 specification to change scope from SIA to DsSAP.
 \subsection{REC-SIA-2.0-20151223}
 Fix typos.
 \subsection{PR-SIA-2.0-20151029}
