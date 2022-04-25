@@ -34,7 +34,7 @@ The authors would like to thank all the participants in DAL-WG discussions  for 
 
 \section{Introduction}
 The Dataset Simple Access (DsSAP) protocol defines several capabilities to support discovery and access to astronomical datasets of any type and dimension.  Typical datasets include spectra, timeseries, 2-D spatial images, spectral data cubes, and cube and hypercube data of higher dimensions as well as derived image data products an event list or visibility data.  The underlying ObsCore data model is a simplified view on the typical image datasets derived from observational data, which have some combination of spatial, spectral (including velocity and redshift), time, and polarization axes.  
-For complete access to datacubes, the SIA-2.0 specification  makes use of features defined in DataLink \citep{std:DataLink}. It also makes use of AccessData services such as SODA, as well as custom data services.
+For complete access to datacubes, the SIA-2.0 specification  makes use of features defined in DataLink \citep{std:DataLink}. It also makes use of AccessData services such as SODA \citep{2017ivoa.spec.0517B}, as well as custom data services.
 
 
 
@@ -52,13 +52,17 @@ The ObsCore data model has been defined in \cite{std:OBSCORE}, it contains and o
 \subsection{The Role in the IVOA Architecture}
 
 DsSAP specifies standardID values for each capability, as defined by VODataService \citep{std:VODS11}. DsSAP services may be registered in an IVOA Registry using the SimpleDALRegExt \citep{std:DALREGEXT} extension schema.
-\subsection{Changes from SIA-2.0i to DsSAP}
+\subsection{Changes from SIA-2.0 to DsSAP}
 
-Virtual Observatory access to astronomical images has been available via the SIA-1.0 protocol for over a decade.  Many such services have been implemented since 2002, and SIA-1.0 \citep{std:SIAP} was formally standardized as an IVOA Recommendation in 2009. SSA \citep{std:SSA} played a similar role for spectra and also used specific metadata in the query response. SIA-2.0 \citep{std:SIA2} was multi-dimensional and fully integrated with the modern VO architecture and related standards, but restricted to images and data cubes.
+Virtual Observatory access to astronomical images has been available via the SIA-1.0 protocol for over a decade.  
+Many such services have been implemented since 2002, and SIA-1.0 \citep{std:SIAP} was formally standardized as an IVOA Recommendation in 2009. 
+SSA \citep{std:SSAP} played a similar role for spectra and also used specific metadata in the query response. 
+SIA-2.0 \citep{std:SIAv2} was multi-dimensional and fully integrated with the modern VO architecture and related 
+standards, but restricted to images and data cubes.
 DsSAP is an extension of SIA2 to other dataproduct types. It can be seen as a server side  parameter based proxy to an ObsTAP service.
-IA-2.0 differs from legacy SIA-1.0 in the following aspects:
 \subsection{Motivating Use Cases}
-Below are some of the more common use cases that have motivated the development of the DsSAP specification. While this is not complete, it helps to understand the problem area covered by this specification.
+Below are some of the more common use cases that have motivated the development of the DsSAP specification. 
+While this is not complete, it helps to understand the problem area covered by this specification.
 \subsubsection{Simple Data Discovery}
 Simple data discovery entails finding services that provide parameter based discovery of images and datacubes, querying the service(s) with a few well known kinds of queries that cover greater than 95\% of use, and getting back easily parsed summary metadata about each available data product. The service discovery would be performed with an IVOA Registry search using a new service type defined for DsSAP. 
 
@@ -89,7 +93,13 @@ The client should be able to download complete datasets with information availab
 
 \subsubsection{Access a Dataset with Operations: Too Big to Download}
 \label{sec:async}
-In many cases, datasets are too large to download and process locally, so the client must be able to perform remote operations. Data discovery could be performed using any discovery protocol (DsSAP, SIA, TAP with ObsCore, etc.).  The client must be able to easily figure out if a low level access service is available for a discovered dataset. This could be using a URL provided in the response or by calling an associated DataLink service. Access operations include basic filtering (cut out a subsection of the data), transformations, or other pixel-level operations or even analysis. With version 1.0 of the SODA 1.0  specification, we will only cover extracting a simple subset of an image or datacube. 
+In many cases, datasets are too large to download and process locally, so the client must be able to perform remote operations.
+Data discovery could be performed using any discovery protocol (DsSAP, SIA, TAP with ObsCore, etc.).
+The client must be able to easily figure out if a low level access service is available for a discovered dataset. 
+This could be using a URL provided in the response or by calling an associated DataLink service.
+Access operations include basic filtering (cut out a subsection of the data), transformations, 
+or other pixel-level operations or even analysis. With version 1.0 of the SODA  specification, we will only cover
+extracting a simple subset of an image or datacube. 
 
 \subsection{Scope and Related Documents}
 \label{sec:examples}
