@@ -487,28 +487,23 @@ CALIB=3
 The TARGET parameter is a string-valued parameter that specifies the name of the target (e.g. the intention of the original science program or observation). The value is compared with the target\_name from the ObsCore data model.
 
 \subsubsection{FORMAT}
-The FORMAT parameter specifies the  format returned by  the access  link.  The value is compared with the access\_format column from the ObsCore data model. This column describes the format of the response from the access\_url (see 3.1.3) so the values could be data file types (e.g. application/fits) or they could be the DataLink  MIME type (\cite{std:DataLink}, \cite{std:TSV}).  
-
-\subsection{RELEASEDATE}
-The RELEASEDATE parameter specifies the range of release dates to be searched for data. 
-The limits are compared to the obs\_release\_date optional attribute of the ObsCore data model. 
-They are expressed as 2 ISO 8601 dates in the general case. A single value is searched for an exact match.
-As the obs\_release\_date attribute is optional, the service self description (\ref{sec:selfdesc})  informs the user of the availability of this parameter.
-RELEASEDATE queries for services not providing the release\_date attribute SHOULD provide an empty response.
+The FORMAT parameter specifies response format(s)  (the access\_format column from the ObsCore data model). This column describes the format of the response from the access\_url (see 3.1.3) so the values could be data file types (e.g. application/fits) or they could be the DataLink  MIME type (\cite{std:DataLink}, \cite{std:TSV}).  
 
 \subsubsection{MAXREC}
 The MAXREC parameter is defined in DALI and allows the client to limit the number or records in the response. A service implementation may also impose default and maximum values for this limit. However the limit is determined, if the output is truncated due to the limit the server must indicate this using an overflow  (section~\ref{sec:succesful}) indicator except in the the special case of MAXREC=0, where the  service respond with metadata-only (normal output document with no records).
+
+\subsubsection{RETRIEVEMODE}
+
+The RETRIEVEMODE parameter allows to select between the full retrieval of the discovered dataset (RETRIEVEMODE = FULL) and a cutout operated by SODA (RETRIEVEMODE = CUTOUT). 
+The default value is "FULL". This parameter allows to find back the distinction operated by SIA1.0 between the archive and cutout modes. 
+SIA2.0 missed this parameter. The SIA2.0 service behavior was supposed to allow only direct full retrieval of datasets or to retrieve DataLink responses.
+In the "CUTOUT" case the access\_url is a SODA query using the same input parameters than the SIA query. In these conditions coverage parameters POS, CIRCLE, POLYGON, BAND, TIME, POL, specify both the search area and the subset of data to be extracted.  
 
 \subsubsection{UPLOAD}
  The DALI UPLOAD parameter is not used by this version of SIA. The use case of uploading lists of coordinates is covered by the multiple-valued parameters values.
 
 \subsubsection{Service PARAMETER self description}
-\label{sec:selfdesc}
-Any service SHOULD  include a DataLink service descriptor in the VOTable output to describe itself. 
-This descriptor would describe the supported query parameters (standard and custom), including list 
-of values for those with a fixed list (COLLECTION, INSTRUMENT, FACILITY, DPTYPE, CALIB, and FORMAT).
-This is particularly important for those parameters where the fixed list is not standardized by any
-specification such as COLLECTION, INSTRUMENT and FACILITY.
+Any service may  include a DataLink service descriptor in the VOTable output to describe itself. This descriptor would describe the supported query parameters (standard and custom), including list of values for those with a fixed list (e.g. COLLECTION, INSTRUMENT, FACILITY, DPTYPE, CALIB, and FORMAT).
 
 \subsection{Availability: VOSI-availability}
 A web service with SIA capabilities must have a VOSI-availability resource \citep{std:VOSI}  as described in DALI .
