@@ -4,13 +4,13 @@
 DOCNAME = SIA
 
 # count up; you probably do not want to bother with versions <1.0
-DOCVERSION = 2.0
+DOCVERSION = 2.1
 
 # Publication date, ISO format; update manually for "releases"
-DOCDATE = 2015-12-23
+DOCDATE = 2022-04-26
 
 # What is it you're writing: NOTE, WD, PR, or REC
-DOCTYPE = REC
+DOCTYPE = WD
 
 AUTHOR_EMAIL=francois.bonnarel@astro.unistra.fr
 
