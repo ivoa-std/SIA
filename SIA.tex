@@ -596,9 +596,9 @@ If the provider implements an AccessData capability for the data being found via
 
 \subsubsection{SIA {query} Service Descriptor}
 
-The DataLink specification describes a mechanism for describing a service within a VOTable resource and recommends that services can describe themselves with a special resource with name="this". SIA \{query\} responses should include a descriptor describing both standard and custom query parameters (if applicable). The descriptor for a service with standard parameters (see~\ref{sec:query}) would be:
+The DataLink specification describes a mechanism for describing a service within a VOTable resource and recommends that services can describe themselves with a special service-descriptor resource with utype="adhoc:this". SIA \{query\} responses should include a descriptor describing both standard and custom query parameters (if applicable). The descriptor for a service with standard parameters (see~\ref{sec:query}) would be:
 \begin{lstlisting}[language=XML]
-<RESOURCE type="meta" utype="adhoc:service" name="this">
+<RESOURCE type="meta" utype="adhoc:this" name="Example Simple Image Access v2 Service">
  <PARAM name="standardID" datatype="char" arraysize="*"
         value="ivo://ivoa.net/std/SIA#query-2.0" />
  <PARAM name="accessURL" datatype="char" arraysize="*"
