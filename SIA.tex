@@ -190,7 +190,17 @@ Except where explicitly noted (see~\ref{sec:ID}), query parameters for text or s
 The sections describing query parameters make use of fixed reference systems and units to simplify client and service implementation. These choices are not suitable for all domains; the values are chosen to enable the {query} resource to be used to search for most standard observational astronomy data. If they are not suitable for a specific domain of interest (e.g. planetary science) then it is feasible to write a very short standard that re-uses the SIA {query} capability but redefines the hard-coded systems and units. This new standard would have a new standardID to distinguish services that implement it from those that implement the capability defined here.
 
 
+\subsubsection{MOC}
+The MOC parameter defines a spatial, temporal or combination of both subset of space-time to be searched using the \xtype{moc} defined in DALI. The parameter syntax is defined as in the MOC specification \citep{MOC2}
 
+Examples :
+\begin{itemize}
+
+\item Searching in cells 1 and 2 at order 1 will read this way MOC = 1/1 2
+\item Searching in cells 1 at order 1 and cells 1 to 6 at order 2 will read MOC = 1/1 2/1-6
+\item Searching in time cell 1 at order 61 in in combination with spatial cells 0 to 2 at order 29 will read this way MOC = t61/1 s29/0-2 	
+
+\end{itemize}
 
 
 \subsubsection{POS}
